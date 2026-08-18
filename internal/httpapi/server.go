@@ -205,10 +205,7 @@ func (s Server) createVehicle(w http.ResponseWriter, r *http.Request) {
 	if !decode(w, r, &input) {
 		return
 	}
-	createInput := fleet.CreateInput{PlateNumber: input.PlateNumber, VehicleType: input.VehicleType, DepotCode: input.DepotCode, CapacityKg: input.CapacityKg, OdometerKm: input.OdometerKm, InspectionDueAt: input.InspectionDueAt, ActorID: actor(r), RequestID: middleware.RequestIDFrom(r.Context())}
-	requestCtx := r.Context()
-	detachedCtx := context.WithoutCancel(requestCtx)
-	result, err := s.Fleet.Create(detachedCtx, createInput)
+	result, err := s.Fleet.Create(r.Context(), fleet.CreateInput{PlateNumber: input.PlateNumber, VehicleType: input.VehicleType, DepotCode: input.DepotCode, CapacityKg: input.CapacityKg, OdometerKm: input.OdometerKm, InspectionDueAt: input.InspectionDueAt, ActorID: actor(r), RequestID: middleware.RequestIDFrom(r.Context())})
 	if err != nil {
 		writeError(w, r, err)
 		return
